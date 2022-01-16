@@ -5,9 +5,7 @@ import PTN
 import shutil
 from pyromod import listen
 
-BOT_TOKEN = " "
-API_ID = " "
-API_HASH = " "
+
 
 
 Bot = Client(
@@ -94,7 +92,10 @@ async def callback(bot, update):
             print(e)
             return
         keyboard.append(refresh_button)
-        await update.message.edit(text="Which one?", reply_markup=InlineKeyboardMarkup(keyboard))
+        try:
+            await update.message.edit(text=f"Which one of these {len(keyboard)} videos?", reply_markup=InlineKeyboardMarkup(keyboard))
+        except:
+            await update.message.reply_text("error!! Send /start")
         return
     tmp = 'khorooji/'
     if not os.path.isdir(tmp):
