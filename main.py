@@ -6,7 +6,11 @@ import shutil
 from pyromod import listen
 
 
+BOT_TOKEN="1946110292:AAGVwE9MlQeHekq4mfYoeYun_4XDQW5p0Hg"
 
+API_ID="2421254"
+
+API_HASH="bc8ee680fd4f2720d3a24e43831c90b1"
 
 Bot = Client(
     ":memory:",
