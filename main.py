@@ -107,7 +107,7 @@ async def callback(bot, update):
     input = folder + "/" + update.data
     try:
         vname = update.data.replace('.ts', '.mp4')
-        n = PTN.parse(vname)
+        n = PTN.parse(vname.rsplit(".", 1)[0])
         title = n['title'].replace("-", " ")
         au2_1 = f'C:/All Projact Primer Pro/Audio Sound Serial Primer Pro Tag/{title}/2.1.mp3'
         
