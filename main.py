@@ -110,20 +110,10 @@ async def callback(bot, update):
         title = n['title'].replace("-", " ")
         au2_1 = f'C:/All Projact Primer Pro/Audio Sound Serial Primer Pro Tag/{title}/2.1.mp3'
 
-        t2t = await update.message.reply_text('تایم واسه تگ صوت 2 (2.2 + 2.1) رو بفرست')
-        t22: Message = await bot.listen(update.message.chat.id, filters=filters.text)
-        t3t = await update.message.reply_text('پنج تا تایم واسه تگ صوت سوم رو بفرست\n3.mp3')
-        t33: Message = await bot.listen(update.message.chat.id, filters=filters.text)
-        t6t = await update.message.reply_text('تایم واسه تگ صوت 6 رو بفرست\n6.mp3')
-        t66: Message = await bot.listen(update.message.chat.id, filters=filters.text)
-        t2 = int(t22.text)
-        t3_1, t3_2, t3_3, t3_4, t3_5 = t33.text.split()
-        t3_1 = int(t3_1)
-        t3_2 = int(t3_2)
-        t3_3 = int(t3_3)
-        t3_4 = int(t3_4)
-        t3_5 = int(t3_5)
-        t6 = int(t66.text)
+        t2t = await update.message.reply_text('همه‌ی تایم‌هارو بکجا بفرست')
+        t22: Message = await bot.listen(update.message.chat.id, filters=filters.text)        
+        t2, t3_1, t3_2, t3_3, t3_4, t3_5, t6 = t22.text.split()
+        
         prccs = await update.message.reply_text("processing..")
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
         os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; [3]adelay={t3_1}|{t3_1}[d]; [3]adelay={t3_2}|{t3_2}[e]; [3]adelay={t3_3}|{t3_3}[f]; [3]adelay={t3_4}|{t3_4}[g]; [3]adelay={t3_5}|{t3_5}[h]; [4]adelay={t6}|{t6}[i]; [0][b][c][d][e][f][g][h][i]amix=9" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
@@ -138,12 +128,8 @@ async def callback(bot, update):
         await ans.delete(True)
         await ask.delete()
         await prccs.delete()
-        await t66.delete(True)
         await t22.delete(True)
-        await t33.delete(True)
         await t2t.delete()
-        await t6t.delete()
-        await t3t.delete()
     except Exception as e:
         print(e)
 
