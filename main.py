@@ -36,19 +36,12 @@ refresh_button = [
     )
 ]
 def gettime(t2):
-    try:
-        tt2 = t2.split('.')[1]
-        t2 = t2.split('.')[0]
-        t2 = f'0{t2[:1]}:{t2[:3][1:]}:{t2[3:]}'
-    except:
-        tt2 = None
-        t2 = f'0{t2[:1]}:{t2[:3][1:]}:{t2[3:]}'
-    t2 = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(t2.split(":"))))
-    if tt2 != None:
-        t2 = f'{t2}{tt2[:1]}00'
+    t3 = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(t2[:8].split(":"))))
+    if "." in t2:
+        t = t3
     else:
-        t2 = f'{t2}000'
-    return t2
+        t = int(t3) + int(t2[9:][:3])
+    return str(t)
 
 @Bot.on_message(filters.text)
 async def stt(bot, m):
@@ -112,7 +105,7 @@ async def callback(bot, update):
 
         t2t = await update.message.reply_text('همه‌ی تایم‌هارو بکجا بفرست')
         t22: Message = await bot.listen(update.message.chat.id, filters=filters.text)        
-        t2, t3_1, t3_2, t3_3, t3_4, t3_5, t6 = t22.text.split()
+        t2, t3_1, t3_2, t3_3, t3_4, t3_5, t6 = get_time(t22.text)
         prccs = await update.message.reply_text("processing..")
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
         os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; [3]adelay={t3_1}|{t3_1}[d]; [3]adelay={t3_2}|{t3_2}[e]; [3]adelay={t3_3}|{t3_3}[f]; [3]adelay={t3_4}|{t3_4}[g]; [3]adelay={t3_5}|{t3_5}[h]; [4]adelay={t6}|{t6}[i]; [0][b][c][d][e][f][g][h][i]amix=9" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
