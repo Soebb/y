@@ -37,7 +37,7 @@ refresh_button = [
 ]
 def gettime(t2):
     t3 = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(t2[:8].split(":"))))
-    if "." in t2:
+    if not "." in t2:
         t = int(t3)*1000
     else:
         t = int(t3)*1000 + int(t2[9:][:3])
