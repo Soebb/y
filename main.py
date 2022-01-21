@@ -62,7 +62,7 @@ async def stt(event):
     await event.reply("Which one?", buttons=keyboard)
 
 
-
+@Bot.on(events.CallbackQuery)
 async def callback(event):
     #global chatid
     #global msgid
