@@ -105,7 +105,7 @@ async def callback(bot, update):
 
         t2t = await update.message.reply_text('همه‌ی تایم‌هارو بکجا بفرست')
         t22: Message = await bot.listen(update.message.chat.id, filters=filters.text)        
-        t2, t3_1, t3_2, t3_3, t3_4, t3_5, t6 = get_time(t22.text)
+        t2, t3_1, t3_2, t3_3, t3_4, t3_5, t6 = get_time(t22.text.split())
         prccs = await update.message.reply_text("processing..")
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
         os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; [3]adelay={t3_1}|{t3_1}[d]; [3]adelay={t3_2}|{t3_2}[e]; [3]adelay={t3_3}|{t3_3}[f]; [3]adelay={t3_4}|{t3_4}[g]; [3]adelay={t3_5}|{t3_5}[h]; [4]adelay={t6}|{t6}[i]; [0][b][c][d][e][f][g][h][i]amix=9" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
