@@ -106,13 +106,19 @@ async def callback(event):
         t3_3=int(get_time(o[3]))
         t3_4=int(get_time(o[4]))
         t3_5=int(get_time(o[5]))
+        amix = 2+len(o)
+        delay_list = ""
+        stream_list = ""
         for i in range(1, len(o)):
-        
+            t=int(get_time(o[i]))
+            delay_list += f"[3]adelay={t}|{t}[a{i}a]; "
+            stream_list += f"[a{i}a]"
+
         t6=int(get_time(o[-1]))
         prccs = await Bot.send_message(event.chat_id, f"🔹Name : {title}\n\n🟠status : working")
 
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
-        os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; [3]adelay={t3_1}|{t3_1}[d]; [3]adelay={t3_2}|{t3_2}[e]; [3]adelay={t3_3}|{t3_3}[f]; [3]adelay={t3_4}|{t3_4}[g]; [3]adelay={t3_5}|{t3_5}[h]; [4]adelay={t6}|{t6}[i]; [0][b][c][d][e][f][g][h][i]amix=9" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
+        os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; {delay_list}[4]adelay={t6}|{t6}[i]; [0]{stream_list}[i]amix={amix}" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
         time.sleep(10)
         os.system(f'ffmpeg -i "{input}" -i "{tmp}{aac}" -c copy -map 0:0 -map 1:0 -y "{tmp}{vname}"')
         done = await Bot.send_message(event.chat_id, f"🔹Name : {title}\n\n🟢status : done")
