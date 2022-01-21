@@ -8,7 +8,7 @@ BOT_TOKEN = " "
 API_ID = " "
 API_HASH = " "
 
-BOT_NAME = "cuttttter"
+BOT_NAME = "cuttter"
 
 
 Bot = TelegramClient(BOT_NAME, API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -67,7 +67,7 @@ async def callback(event):
     #global chatid
     #global msgid
     #global previous_cut_time
-    if update.data == b"refresh":
+    if event.data == b"refresh":
         keyboard = []
         keyboard.append(refresh_button)
         try:
@@ -92,9 +92,9 @@ async def callback(event):
     tmp = 'khorooji/'
     if not os.path.isdir(tmp):
         os.makedirs(tmp)
-    input = folder + "/" + update.data.decode('utf-8')
+    input = folder + "/" + event.data.decode('utf-8')
     try:
-        vname = update.data.decode('utf-8').replace('.ts', '.mp4')
+        vname = event.data.decode('utf-8').replace('.ts', '.mp4')
         aac = vname.rsplit(".", 1)[0]+'.aac'
         n = PTN.parse(vname.rsplit(".", 1)[0])
         title = n['title'].replace("-", " ")
@@ -111,9 +111,9 @@ async def callback(event):
         os.system(f'ffmpeg -i "{input}" -i "{tmp}{aac}" -c copy -map 0:0 -map 1:0 -y "{tmp}{vname}"')
         time.sleep(10)
         #await update.message.reply_text(f"Done. Check {tmp}{vname}")
-        await bot.send_audio(chat_id=update.message.chat.id, audio=tmp+aac, caption=f"also saved in {tmp}{aac}")
+        await Bot.send_file(event.chat_id, file=tmp+aac)
         os.remove(tmp+aac)
-        await bot.send_video(chat_id=update.message.chat.id, video=tmp+vname, caption=f"also saved in {tmp}{vname}")
+        await Bot.send_file(event.chat_id, file=tmp+vname)
         async with Bot.conversation(event.chat_id) as conv:
             ask = await conv.send_message('remove merged video in system?\n /yes or /no')
             ans = await conv.get_response()
