@@ -1,21 +1,13 @@
 import os, time, glob, datetime
-from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
+
 import PTN
 import shutil
-from pyromod import listen
-
 
 BOT_TOKEN=" "
 API_ID=" "
 API_HASH=" "
 
-Bot = Client(
-    ":memory:",
-    bot_token = BOT_TOKEN,
-    api_id = API_ID,
-    api_hash = API_HASH
-)
+
 
 
 folder = 'C:/Users/Administrator/Downloads/Telegram Desktop'
@@ -43,17 +35,17 @@ def get_time(t2):
         t = int(t3)*1000 + int(t2[9:][:3])
     return str(t)
 
-@Bot.on_message(filters.text)
-async def stt(bot, m):
+
+async def stt(event):
     keyboard = []
     keyboard.append(refresh_button)
     try:
         for file in glob.glob(vdir):
             keyboard.append(
                 [
-                    InlineKeyboardButton(
-                        text=file.rsplit('/', 1)[1].replace(main, ''),
-                        callback_data=file.rsplit('/', 1)[1].replace(main, '')
+                    Button.inline(
+                        file.rsplit('/', 1)[1].replace(main, ''),
+                        data=file.rsplit('/', 1)[1].replace(main, '')
                     )
                 ]
             )
@@ -62,7 +54,7 @@ async def stt(bot, m):
         return
     keyboard.append(refresh_button)
     #await bot.send_message(chat_id=id, text="Which one?", reply_markup=InlineKeyboardMarkup(keyboard))
-    await m.reply_text(text="Which one?", reply_markup=InlineKeyboardMarkup(keyboard))
+    await event.reply("Which one?", reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 @Bot.on_callback_query()
@@ -120,12 +112,12 @@ async def callback(bot, update):
         ans: Message = await bot.listen(update.message.chat.id, filters=filters.text)
         if "yes" in ans.text:
             os.remove(tmp+vname)
-        await ans.delete(True)
+        await ans.delete()
         await ask.delete()
         await prccs.delete()
-        await t22.delete(True)
+        await t22.delete()
         await t2t.delete()
     except Exception as e:
         print(e)
 
-Bot.run()
+Bot.run_until_disconnected()
