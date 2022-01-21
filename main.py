@@ -106,7 +106,9 @@ async def callback(event):
         t3_3=int(get_time(o[3]))
         t3_4=int(get_time(o[4]))
         t3_5=int(get_time(o[5]))
-        t6=int(get_time(o[6]))
+        for i in range(1, len(o)):
+        
+        t6=int(get_time(o[-1]))
         prccs = await Bot.send_message(event.chat_id, f"🔹Name : {title}\n\n🟠status : working")
 
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
