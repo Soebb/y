@@ -102,8 +102,14 @@ async def callback(event):
         async with Bot.conversation(event.chat_id) as conv:
             t2t = await conv.send_message('همه‌ی تایم‌هارو بکجا بفرست')
             t22 = await conv.get_response()
-            t223 = t22.text
-        t2, t3_1, t3_2, t3_3, t3_4, t3_5, t6 = get_time(t223.split())
+            o = t22.text.split()
+        t2 = int(get_time(o[0]))
+        t3_1=int(get_time(o[1]))
+        t3_2=int(get_time(o[2]))
+        t3_3=int(get_time(o[3]))
+        t3_4=int(get_time(o[4]))
+        t3_5=int(get_time(o[5]))
+        t6=int(get_time(o[6]))
         prccs = await Bot.send_message("processing..")
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
         os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; [3]adelay={t3_1}|{t3_1}[d]; [3]adelay={t3_2}|{t3_2}[e]; [3]adelay={t3_3}|{t3_3}[f]; [3]adelay={t3_4}|{t3_4}[g]; [3]adelay={t3_5}|{t3_5}[h]; [4]adelay={t6}|{t6}[i]; [0][b][c][d][e][f][g][h][i]amix=9" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
