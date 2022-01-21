@@ -1,14 +1,24 @@
 import os, time, glob, datetime
-
 import PTN
 import shutil
-
-BOT_TOKEN=" "
-API_ID=" "
-API_HASH=" "
+from telethon import TelegramClient, events, Button
 
 
+BOT_TOKEN = " "
+API_ID = " "
+API_HASH = " "
 
+BOT_NAME = "cuttttter"
+
+
+Bot = TelegramClient(BOT_NAME, API_ID, API_HASH).start(bot_token=BOT_TOKEN)
+
+refresh_button = [
+    Button.inline(
+        "Refresh List",
+        data="refresh"
+    )
+]
 
 folder = 'C:/Users/Administrator/Downloads/Telegram Desktop'
 msgid = 0
@@ -21,12 +31,7 @@ a6 = '6.mp3'
 
 main = folder.rsplit('/', 1)[1] + '\\'
 
-refresh_button = [
-    InlineKeyboardButton(
-        text='Refresh List',
-        callback_data='refresh'
-    )
-]
+
 def get_time(t2):
     t3 = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(t2[:8].split(":"))))
     if not "." in t2:
@@ -35,7 +40,7 @@ def get_time(t2):
         t = int(t3)*1000 + int(t2[9:][:3])
     return str(t)
 
-
+@Bot.on(events.NewMessage(incoming=True, func=lambda e: e.is_private))
 async def stt(event):
     keyboard = []
     keyboard.append(refresh_button)
@@ -54,24 +59,24 @@ async def stt(event):
         return
     keyboard.append(refresh_button)
     #await bot.send_message(chat_id=id, text="Which one?", reply_markup=InlineKeyboardMarkup(keyboard))
-    await event.reply("Which one?", reply_markup=InlineKeyboardMarkup(keyboard))
+    await event.reply("Which one?", buttons=keyboard)
 
 
-@Bot.on_callback_query()
-async def callback(bot, update):
+
+async def callback(event):
     #global chatid
     #global msgid
     #global previous_cut_time
-    if update.data == "refresh":
+    if update.data == b"refresh":
         keyboard = []
         keyboard.append(refresh_button)
         try:
             for file in glob.glob(vdir):
                 keyboard.append(
                     [
-                        InlineKeyboardButton(
-                            text=file.rsplit('/', 1)[1].replace(main, ''),
-                            callback_data=file.rsplit('/', 1)[1].replace(main, '')
+                        Button.inline(
+                            file.rsplit('/', 1)[1].replace(main, ''),
+                            data=file.rsplit('/', 1)[1].replace(main, '')
                         )
                     ]
                 )
@@ -80,14 +85,14 @@ async def callback(bot, update):
             return
         keyboard.append(refresh_button)
         try:
-            await update.message.edit(text=f"Which one of these {len(keyboard)} videos?", reply_markup=InlineKeyboardMarkup(keyboard))
+            await event.edit(f"Which one of these {len(keyboard)} videos?", buttons=keyboard)
         except:
-            await update.message.reply_text("error!! Send /start")
+            await Bot.send_message("error!! Send /start")
         return
     tmp = 'khorooji/'
     if not os.path.isdir(tmp):
         os.makedirs(tmp)
-    input = folder + "/" + update.data
+    input = folder + "/" + update.data.decode('utf-8')
     try:
         vname = update.data.replace('.ts', '.mp4')
         aac = vname.rsplit(".", 1)[0]+'.aac'
