@@ -35,7 +35,7 @@ refresh_button = [
         callback_data='refresh'
     )
 ]
-def gettime(t2):
+def get_time(t2):
     t3 = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(t2[:8].split(":"))))
     if not "." in t2:
         t = int(t3)*1000
