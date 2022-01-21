@@ -94,16 +94,17 @@ async def callback(event):
         os.makedirs(tmp)
     input = folder + "/" + update.data.decode('utf-8')
     try:
-        vname = update.data.replace('.ts', '.mp4')
+        vname = update.data.decode('utf-8').replace('.ts', '.mp4')
         aac = vname.rsplit(".", 1)[0]+'.aac'
         n = PTN.parse(vname.rsplit(".", 1)[0])
         title = n['title'].replace("-", " ")
         au2_1 = f'C:/All Projact Primer Pro/Audio Sound Serial Primer Pro Tag/{title}/2.1.mp3'
-
-        t2t = await update.message.reply_text('همه‌ی تایم‌هارو بکجا بفرست')
-        t22: Message = await bot.listen(update.message.chat.id, filters=filters.text)        
-        t2, t3_1, t3_2, t3_3, t3_4, t3_5, t6 = get_time(t22.text.split())
-        prccs = await update.message.reply_text("processing..")
+        async with Bot.conversation(event.chat_id) as conv:
+            t2t = await conv.send_message('همه‌ی تایم‌هارو بکجا بفرست')
+            t22 = await conv.get_response()
+            t223 = t22.text
+        t2, t3_1, t3_2, t3_3, t3_4, t3_5, t6 = get_time(t223.split())
+        prccs = await Bot.send_message("processing..")
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
         os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; [3]adelay={t3_1}|{t3_1}[d]; [3]adelay={t3_2}|{t3_2}[e]; [3]adelay={t3_3}|{t3_3}[f]; [3]adelay={t3_4}|{t3_4}[g]; [3]adelay={t3_5}|{t3_5}[h]; [4]adelay={t6}|{t6}[i]; [0][b][c][d][e][f][g][h][i]amix=9" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
         time.sleep(10)
@@ -113,8 +114,9 @@ async def callback(event):
         await bot.send_audio(chat_id=update.message.chat.id, audio=tmp+aac, caption=f"also saved in {tmp}{aac}")
         os.remove(tmp+aac)
         await bot.send_video(chat_id=update.message.chat.id, video=tmp+vname, caption=f"also saved in {tmp}{vname}")
-        ask = await update.message.reply_text('remove merged video in system?\n /yes or /no')
-        ans: Message = await bot.listen(update.message.chat.id, filters=filters.text)
+        async with Bot.conversation(event.chat_id) as conv:
+            ask = await conv.send_message('remove merged video in system?\n /yes or /no')
+            ans = await conv.get_response()
         if "yes" in ans.text:
             os.remove(tmp+vname)
         await ans.delete()
