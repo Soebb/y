@@ -46,6 +46,7 @@ async def stt(event):
     keyboard.append(refresh_button)
     try:
         for file in glob.glob(vdir):
+            
             keyboard.append(
                 [
                     Button.inline(
@@ -123,9 +124,8 @@ async def callback(event):
         os.system(f'ffmpeg -i "{input}" -i "{tmp}{aac}" -c copy -map 0:0 -map 1:0 -y "{tmp}{vname}"')
         done = await Bot.send_message(event.chat_id, f"🔹Name : {title}\n\n🟢status : done")
         time.sleep(5)
-        #await update.message.reply_text(f"Done. Check {tmp}{vname}")
         await Bot.send_file(event.chat_id, file=tmp+aac)
-        os.remove(tmp+aac)
+        #os.remove(tmp+aac)
         await Bot.send_file(event.chat_id, file=tmp+vname)
         async with Bot.conversation(event.chat_id) as conv:
             ask = await conv.send_message('remove merged video in system?\n /yes or /no')
