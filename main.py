@@ -87,7 +87,7 @@ async def callback(event):
         try:
             await event.edit(f"Which one of these {len(keyboard)} videos?", buttons=keyboard)
         except:
-            await Bot.send_message("error!! Send /start")
+            await Bot.send_message(event.chat_id, "error!! Send /start")
         return
     tmp = 'khorooji/'
     if not os.path.isdir(tmp):
@@ -100,7 +100,7 @@ async def callback(event):
         title = n['title'].replace("-", " ")
         au2_1 = f'C:/All Projact Primer Pro/Audio Sound Serial Primer Pro Tag/{title}/2.1.mp3'
         async with Bot.conversation(event.chat_id) as conv:
-            t2t = await conv.send_message('همه‌ی تایم‌هارو بکجا بفرست')
+            t2t = await conv.send_message(event.chat_id, 'همه‌ی تایم‌هارو بکجا بفرست')
             t22 = await conv.get_response()
             o = t22.text.split()
         t2 = int(get_time(o[0]))
@@ -110,7 +110,7 @@ async def callback(event):
         t3_4=int(get_time(o[4]))
         t3_5=int(get_time(o[5]))
         t6=int(get_time(o[6]))
-        prccs = await Bot.send_message("processing..")
+        prccs = await Bot.send_message(event.chat_id, "processing..")
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
         os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; [3]adelay={t3_1}|{t3_1}[d]; [3]adelay={t3_2}|{t3_2}[e]; [3]adelay={t3_3}|{t3_3}[f]; [3]adelay={t3_4}|{t3_4}[g]; [3]adelay={t3_5}|{t3_5}[h]; [4]adelay={t6}|{t6}[i]; [0][b][c][d][e][f][g][h][i]amix=9" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
         time.sleep(10)
@@ -121,7 +121,7 @@ async def callback(event):
         os.remove(tmp+aac)
         await Bot.send_file(event.chat_id, file=tmp+vname)
         async with Bot.conversation(event.chat_id) as conv:
-            ask = await conv.send_message('remove merged video in system?\n /yes or /no')
+            ask = await conv.send_message(event.chat_id, 'remove merged video in system?\n /yes or /no')
             ans = await conv.get_response()
         if "yes" in ans.text:
             os.remove(tmp+vname)
