@@ -64,9 +64,6 @@ async def stt(event):
 
 @Bot.on(events.CallbackQuery)
 async def callback(event):
-    #global chatid
-    #global msgid
-    #global previous_cut_time
     if event.data == b"refresh":
         keyboard = []
         keyboard.append(refresh_button)
@@ -89,7 +86,7 @@ async def callback(event):
         except:
             await Bot.send_message(event.chat_id, "error!! Send /start")
         return
-    tmp = 'khorooji/'
+    tmp = "C:/Users/Administrator/Downloads/Telegram Desktop/tage soti zade shode/"
     if not os.path.isdir(tmp):
         os.makedirs(tmp)
     input = folder + "/" + event.data.decode('utf-8')
