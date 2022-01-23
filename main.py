@@ -86,7 +86,8 @@ async def callback(event):
         except:
             await Bot.send_message(event.chat_id, "error!! Send /start")
         return
-    tmp = 'khorooji/'
+    tmp = "C:/Users/Administrator/Downloads/Telegram Desktop/tage soti zade shode/"
+
     if not os.path.isdir(tmp):
         os.makedirs(tmp)
     input = folder + "/" + event.data.decode('utf-8')
