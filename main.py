@@ -100,7 +100,7 @@ async def callback(event):
         title = n['title'].replace("-", " ")
         au2_1 = f'C:/All Projact Primer Pro/Audio Sound Serial Primer Pro Tag/{title}/2.1.mp3'
         async with Bot.conversation(event.chat_id) as conv:
-            t2t = await conv.send_message('همه‌ی تایم‌هارو بکجا بفرست')
+            t2t = await conv.send_message('همه‌ی تایم هارو بفرست\n\nتایم های تگ سوم فعلا فقط پنج‌تا باشد')
             t22 = await conv.get_response()
             o = t22.text.split()
         t2 = int(get_time(o[0]))
