@@ -8,7 +8,7 @@ BOT_TOKEN = " "
 API_ID = " "
 API_HASH = " "
 
-BOT_NAME = "cuttter"
+BOT_NAME = "tagsot"
 
 
 Bot = TelegramClient(BOT_NAME, API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -64,9 +64,6 @@ async def stt(event):
 
 @Bot.on(events.CallbackQuery)
 async def callback(event):
-    #global chatid
-    #global msgid
-    #global previous_cut_time
     if event.data == b"refresh":
         keyboard = []
         keyboard.append(refresh_button)
