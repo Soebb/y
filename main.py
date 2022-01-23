@@ -143,6 +143,7 @@ async def callback(event):
         await prccs.delete()
         await t22.delete()
         await t2t.delete()
+        await done.delete()
         async with Bot.conversation(event.chat_id) as conv:
             ask = await conv.send_message('send /video , /audio to remove them in system.\nOr send /both to remove both ,\nOr send /skip to skip and delete this msg')
             ans = await conv.get_response()
