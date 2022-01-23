@@ -106,7 +106,7 @@ async def callback(event):
         t3_3=int(get_time(o[3]))
         t3_4=int(get_time(o[4]))
         t3_5=int(get_time(o[5]))
-        t6=int(get_time(o[6]))
+        t6=int(get_time(o[-1]))
         prccs = await Bot.send_message(event.chat_id, "processing..")
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
         os.system(f'ffmpeg -i "{input}" -vn -y org.mp3')
@@ -124,23 +124,29 @@ async def callback(event):
         out = out.overlay(aud3, position=t3_5, gain_during_overlay=-2)
         out = out.overlay(aud6, position=t6, gain_during_overlay=-2)
         out.export("mix.mp3", format="mp3")
-        os.system(f'ffmpeg -i mix.mp3 "{tmp}{aac}"')
+        os.system(f'ffmpeg -i mix.mp3 -y "{tmp}{aac}"')
         os.system(f'ffmpeg -i "{input}" -i "{tmp}{aac}" -c copy -map 0:0 -map 1:0 -y "{tmp}{vname}"')
         time.sleep(10)
         #await update.message.reply_text(f"Done. Check {tmp}{vname}")
         await Bot.send_file(event.chat_id, file=tmp+aac)
-        os.remove(tmp+aac)
+        #os.remove(tmp+aac)
+        os.remove("mix.mp3")
         await Bot.send_file(event.chat_id, file=tmp+vname)
-        async with Bot.conversation(event.chat_id) as conv:
-            ask = await conv.send_message('remove merged video in system?\n /yes or /no')
-            ans = await conv.get_response()
-        if "yes" in ans.text:
-            os.remove(tmp+vname)
-        await ans.delete()
-        await ask.delete()
         await prccs.delete()
         await t22.delete()
         await t2t.delete()
+        async with Bot.conversation(event.chat_id) as conv:
+            ask = await conv.send_message('send /video , /audio to remove them in system.\nOr send /both to remove /both ,\nOr send /skip to skip and delete this msg')
+            ans = await conv.get_response()
+        if "video" in ans.text:
+            os.remove(tmp+vname)
+        elif "audio" in ans.text:
+            os.remove(tmp+aac)
+        elif "both" in ans.text:
+            os.remove(tmp+vname)
+            os.remove(tmp+aac)
+        await ans.delete()
+        await ask.delete()
     except Exception as e:
         print(e)
 
