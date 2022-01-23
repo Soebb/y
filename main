@@ -128,17 +128,22 @@ async def callback(event):
         await Bot.send_file(event.chat_id, file=tmp+aac)
         #os.remove(tmp+aac)
         await Bot.send_file(event.chat_id, file=tmp+vname)
-        async with Bot.conversation(event.chat_id) as conv:
-            ask = await conv.send_message('remove merged video in system?\n /yes or /no')
-            ans = await conv.get_response()
-        if "yes" in ans.text:
-            os.remove(tmp+vname)
-        await ans.delete()
-        await ask.delete()
         await prccs.delete()
-        await done.delete()
         await t22.delete()
         await t2t.delete()
+        await done.delete()
+        async with Bot.conversation(event.chat_id) as conv:
+            ask = await conv.send_message('send /video , /audio to remove them in system.\nOr send /both to remove /both ,\nOr send /skip to skip and delete this msg')
+            ans = await conv.get_response()
+        if "video" in ans.text:
+            os.remove(tmp+vname)
+        elif "audio" in ans.text:
+            os.remove(tmp+aac)
+        elif "both" in ans.text:
+            os.remove(tmp+vname)
+            os.remove(tmp+aac)
+        await ans.delete()
+        await ask.delete()
     except Exception as e:
         print(e)
 
