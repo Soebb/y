@@ -7,8 +7,10 @@ from telethon import TelegramClient, events, Button
 BOT_TOKEN = " "
 API_ID = " "
 API_HASH = " "
+# output folder
+tmp = "C:/Users/Administrator/Downloads/Telegram Desktop/tage soti zade shode/"
 
-BOT_NAME = "cuttter"
+BOT_NAME = "voice-tag-Robot"
 
 
 Bot = TelegramClient(BOT_NAME, API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -20,9 +22,8 @@ refresh_button = [
     )
 ]
 
+# input folder
 folder = 'C:/Users/Administrator/Downloads/Telegram Desktop'
-msgid = 0
-chatid = 0
 vdir = folder + '/*'
 a1 = '1.mp3'
 a2 = '2.mp3'
@@ -59,7 +60,6 @@ async def stt(event):
         print(e)
         return
     keyboard.append(refresh_button)
-    #await bot.send_message(chat_id=id, text="Which one?", reply_markup=InlineKeyboardMarkup(keyboard))
     await event.reply("Which one?", buttons=keyboard)
 
 
@@ -88,7 +88,7 @@ async def callback(event):
         except:
             await Bot.send_message(event.chat_id, "error!! Send /start")
         return
-    tmp = "C:/Users/Administrator/Downloads/Telegram Desktop/tage soti zade shode/"
+
     if not os.path.isdir(tmp):
         os.makedirs(tmp)
     input = folder + "/" + event.data.decode('utf-8')
@@ -126,14 +126,13 @@ async def callback(event):
         done = await Bot.send_message(event.chat_id, f"🔹Name : {title}\n\n🟢status : done")
         time.sleep(5)
         await Bot.send_file(event.chat_id, file=tmp+aac)
-        #os.remove(tmp+aac)
         await Bot.send_file(event.chat_id, file=tmp+vname)
         await prccs.delete()
         await t22.delete()
         await t2t.delete()
         await done.delete()
         async with Bot.conversation(event.chat_id) as conv:
-            ask = await conv.send_message('send /video , /audio to remove them in system.\nOr send /both to remove /both ,\nOr send /skip to skip and delete this msg')
+            ask = await conv.send_message('send /video , /audio to remove them in system.\nOr send /both to remove both ,\nOr send /skip to skip and delete this msg')
             ans = await conv.get_response()
         if "video" in ans.text:
             os.remove(tmp+vname)
