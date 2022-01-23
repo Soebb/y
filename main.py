@@ -2,7 +2,7 @@ import os, time, glob, datetime
 import PTN
 import shutil
 from telethon import TelegramClient, events, Button
-
+from pydub import AudioSegment
 
 BOT_TOKEN = " "
 API_ID = " "
