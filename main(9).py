@@ -28,7 +28,7 @@ a1 = '1.mp3'
 a2 = '2.mp3'
 a3 = '3.mp3'
 a6 = '6.mp3'
-
+org = 'org.mp3'
 main = folder.rsplit('/', 1)[1] + '\\'
 
 
@@ -109,8 +109,22 @@ async def callback(event):
         t6=int(get_time(o[6]))
         prccs = await Bot.send_message(event.chat_id, "processing..")
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
-        os.system(f'ffmpeg -i "{input}" -vn -i {a1} -vn -i {a2} -vn -i {a3} -vn -i {a6} -vn -filter_complex "[1]adelay=00000|00000[b]; [2]adelay={t2}|{t2}[c]; [3]adelay={t3_1}|{t3_1}[d]; [3]adelay={t3_2}|{t3_2}[e]; [3]adelay={t3_3}|{t3_3}[f]; [3]adelay={t3_4}|{t3_4}[g]; [3]adelay={t3_5}|{t3_5}[h]; [4]adelay={t6}|{t6}[i]; [0][b][c][d][e][f][g][h][i]amix=9" -c:a aac -b:a 125k -y "{tmp}{aac}"')   
-        time.sleep(10)
+        os.system(f'ffmpeg -i "{input}" -vn -y org.mp3')
+        aud2 = AudioSegment.from_mp3(a2)
+        aud3 = AudioSegment.from_mp3(a3)
+        audorg = AudioSegment.from_mp3(org)
+        aud1 = AudioSegment.from_mp3(a1)
+        aud6 = AudioSegment.from_mp3(a6)
+        out = audorg.overlay(aud1, gain_during_overlay=-2)
+        out = out.overlay(aud2, position=t2, gain_during_overlay=-2)
+        out = out.overlay(aud3, position=t3_1, gain_during_overlay=-2)
+        out = out.overlay(aud3, position=t3_2, gain_during_overlay=-2)
+        out = out.overlay(aud3, position=t3_3, gain_during_overlay=-2)
+        out = out.overlay(aud3, position=t3_4, gain_during_overlay=-2)
+        out = out.overlay(aud3, position=t3_5, gain_during_overlay=-2)
+        out = out.overlay(aud6, position=t6, gain_during_overlay=-2)
+        out.export("mix.mp3", format="mp3")
+        os.system(f'ffmpeg -i mix.mp3 "{tmp}{aac}"')
         os.system(f'ffmpeg -i "{input}" -i "{tmp}{aac}" -c copy -map 0:0 -map 1:0 -y "{tmp}{vname}"')
         time.sleep(10)
         #await update.message.reply_text(f"Done. Check {tmp}{vname}")
