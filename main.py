@@ -108,6 +108,7 @@ async def callback(event):
         t3_5=int(get_time(o[5]))
         t6=int(get_time(o[-1]))
         prccs = await Bot.send_message(event.chat_id, "processing..")
+
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
         os.system(f'ffmpeg -i "{input}" -vn -y org.mp3')
         aud2 = AudioSegment.from_mp3(a2)
@@ -126,7 +127,8 @@ async def callback(event):
         out.export("mix.mp3", format="mp3")
         os.system(f'ffmpeg -i mix.mp3 -y "{tmp}{aac}"')
         os.system(f'ffmpeg -i "{input}" -i "{tmp}{aac}" -c copy -map 0:0 -map 1:0 -y "{tmp}{vname}"')
-        time.sleep(10)
+        done = await Bot.send_message(event.chat_id, f"🔹Name : {title}\n\n🟢status : done")
+        time.sleep(5)
         #await update.message.reply_text(f"Done. Check {tmp}{vname}")
         await Bot.send_file(event.chat_id, file=tmp+aac)
         #os.remove(tmp+aac)
