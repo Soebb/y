@@ -7,8 +7,10 @@ from telethon import TelegramClient, events, Button
 BOT_TOKEN = " "
 API_ID = " "
 API_HASH = " "
+# output folder
+tmp = "C:/Users/Administrator/Downloads/Telegram Desktop/tage soti zade shode/"
 
-BOT_NAME = "tagsot"
+BOT_NAME = "voice-tag-robot"
 
 
 Bot = TelegramClient(BOT_NAME, API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -20,9 +22,8 @@ refresh_button = [
     )
 ]
 
+# input folder
 folder = 'C:/Users/Administrator/Downloads/Telegram Desktop'
-msgid = 0
-chatid = 0
 vdir = folder + '/*'
 a1 = '1.mp3'
 a2 = '2.mp3'
@@ -59,7 +60,6 @@ async def stt(event):
         print(e)
         return
     keyboard.append(refresh_button)
-    #await bot.send_message(chat_id=id, text="Which one?", reply_markup=InlineKeyboardMarkup(keyboard))
     await event.reply("Which one?", buttons=keyboard)
 
 
@@ -88,7 +88,6 @@ async def callback(event):
         except:
             await Bot.send_message(event.chat_id, "error!! Send /start")
         return
-    tmp = "C:/Users/Administrator/Downloads/Telegram Desktop/tage soti zade shode/"
 
     if not os.path.isdir(tmp):
         os.makedirs(tmp)
@@ -100,7 +99,7 @@ async def callback(event):
         title = n['title'].replace("-", " ")
         au2_1 = f'C:/All Projact Primer Pro/Audio Sound Serial Primer Pro Tag/{title}/2.1.mp3'
         async with Bot.conversation(event.chat_id) as conv:
-            t2t = await conv.send_message('همه‌ی تایم هارو بفرست\n\nتایم های تگ سوم فعلا فقط پنج‌تا باشد')
+            t2t = await conv.send_message('همه‌ی تایم هارو بفرست')
             t22 = await conv.get_response()
             o = t22.text.split()
         t2 = int(get_time(o[0]))
@@ -109,7 +108,7 @@ async def callback(event):
         t3_3=int(get_time(o[3]))
         t3_4=int(get_time(o[4]))
         t3_5=int(get_time(o[5]))
-        t6=int(get_time(o[6]))
+        t6=int(get_time(o[-1]))
         prccs = await Bot.send_message(event.chat_id, f"🔹Name : {title}\n\n🟠status : working")
 
         os.system(f'ffmpeg -i "{au2_1}" -i 2.2.mp3 -y 2.mp3')
@@ -126,22 +125,26 @@ async def callback(event):
         out = out.overlay(aud3, position=t3_3, gain_during_overlay=-2)
         out = out.overlay(aud3, position=t3_4, gain_during_overlay=-2)
         out = out.overlay(aud3, position=t3_5, gain_during_overlay=-2)
+        if len(o) == 8:
+            t3_6=int(get_time(o[6]))
+            out = out.overlay(aud3, position=t3_6, gain_during_overlay=-2)
+        if len(o) == 9:
+            t3_7=int(get_time(o[7]))
+            out = out.overlay(aud3, position=t3_7, gain_during_overlay=-2)
         out = out.overlay(aud6, position=t6, gain_during_overlay=-2)
         out.export("mix.mp3", format="mp3")
         os.system(f'ffmpeg -i mix.mp3 -y "{tmp}{aac}"')
         os.system(f'ffmpeg -i "{input}" -i "{tmp}{aac}" -c copy -map 0:0 -map 1:0 -y "{tmp}{vname}"')
         done = await Bot.send_message(event.chat_id, f"🔹Name : {title}\n\n🟢status : done")
         time.sleep(5)
-        #await update.message.reply_text(f"Done. Check {tmp}{vname}")
         await Bot.send_file(event.chat_id, file=tmp+aac)
-        #os.remove(tmp+aac)
         os.remove("mix.mp3")
         await Bot.send_file(event.chat_id, file=tmp+vname)
         await prccs.delete()
         await t22.delete()
         await t2t.delete()
         async with Bot.conversation(event.chat_id) as conv:
-            ask = await conv.send_message('send /video , /audio to remove them in system.\nOr send /both to remove /both ,\nOr send /skip to skip and delete this msg')
+            ask = await conv.send_message('send /video , /audio to remove them in system.\nOr send /both to remove both ,\nOr send /skip to skip and delete this msg')
             ans = await conv.get_response()
         if "video" in ans.text:
             os.remove(tmp+vname)
