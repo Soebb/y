@@ -47,9 +47,76 @@ Bot = Client(
     api_hash=API_HASH
 )
 
+def onvan(title_splited):
+    title = ''
+    for i in range(0, len(title_splited)):
+        s = title_splited[i]
+        title += s[:1].upper() + s[1:len(s)].lower() + ' '
+    return title
+
+def get_cap(m):
+    e = m.rsplit("E", 1)[1]
+    E = "E"+e.split()[0]
+    q = e.replace('.', ' ').split()[1]
+    X, fa = serial_name(m)
+    H = fa.replace("_", " ").replace("#", "")
+    cap = f"🔺{H} قسمت {E} \n🔸 دوبله فارسی"
+    cap = f"{cap}{q} \n🆔👉 @dlmacvin_new | {fa}"
+    return cap
+
+sended=[]
+@Bot.on_message(filters.private & filters.text & filters.regex('/up'))
+async def uptotg(bot, __):
+    folder = "C:/example_folder"
+    chat = -1001457054266
+    total=[]
+    eps = []
+    dup_eps = []
+    for f in glob.glob(folder+'/*'):
+        m = f.rsplit('/', 1)[1] + '\\'
+        f=f.replace(m, '')
+        if ("dub" in f) and f.endswith((".mkv",".mp4",".ts")):
+            ext=f.rsplit('.', 1)[1]
+            t=f.split('-', 1)[1].split('-dub')[0].replace('-', ' ')
+            t=onvan(t.split())
+            e=f.replace('le','').replace('_',' ').replace('.',' ').split('dub')[1].split()[0]
+            e="E"+e
+            metadata = extractMetadata(createParser(folder+"/"+f))
+            q=str(metadata.get('height'))
+            q="240" if q[:1] in ['2','3'] else q
+            q=f' {q}P.'
+            new_name = t+e+q+ext
+            if e in eps:
+                dup_eps.append(e)
+            os.rename(folder+"/"+f, folder+"/"+new_name)
+            if not "1080" in q:
+                eps.append(e)
+                total.append(new_name)
+
+    folder=folder+"/"
+    tot=sort_alphanumeric(total)
+    for f in tot:
+        e = "E"+f.rsplit("E", 1)[1].split()[0]
+        if not f in sended:
+            if not e in dup_eps:
+                cap = get_cap(f)
+                await bot.send_video(video=folder+f, chat_id=chat, caption=cap)
+                await bot.send_document(document=folder+f, chat_id=chat, caption=cap)
+                sended.append(f)
+            else:
+                for ff in tot:
+                    if e in ff:
+                        cap = get_cap(ff)
+                        await bot.send_video(video=folder+ff, chat_id=chat, caption=cap)
+                        sended.append(ff)
+                for fff in tot:
+                    if e in fff:
+                        cap = get_cap(fff)
+                        await bot.send_document(document=folder+fff, chat_id=chat, caption=cap)
+
+
 
 previous_cut_time = '00:00:00 02:00:04'
-
 
 dir = 'C:/dlmacvin/Pay-ss/'
 msgid = 0
