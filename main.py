@@ -67,6 +67,7 @@ def get_cap(m):
 sended=[]
 @Bot.on_message(filters.private & filters.text & filters.regex('/up'))
 async def uptotg(bot, __):
+    head = "@dlmacvin_new - "
     folder = "C:/example_folder"
     chat = -1001457054266
     total=[]
@@ -100,19 +101,19 @@ async def uptotg(bot, __):
         if not f in sended:
             if not t in dup_titles:
                 cap = get_cap(f)
-                await bot.send_video(video=folder+f, chat_id=chat, caption=cap)
-                await bot.send_document(document=folder+f, chat_id=chat, caption=cap)
+                await bot.send_video(video=folder+f, file_name=head+f, chat_id=chat, caption=cap)
+                await bot.send_document(document=folder+f, file_name=head+f, chat_id=chat, caption=cap)
                 sended.append(f)
             else:
                 for ff in tot:
                     if t in ff:
                         cap = get_cap(ff)
-                        await bot.send_video(video=folder+ff, chat_id=chat, caption=cap)
+                        await bot.send_video(video=folder+ff, file_name=head+f, chat_id=chat, caption=cap)
                         sended.append(ff)
                 for fff in tot:
                     if t in fff:
                         cap = get_cap(fff)
-                        await bot.send_document(document=folder+fff, chat_id=chat, caption=cap)
+                        await bot.send_document(document=folder+fff, file_name=head+f, chat_id=chat, caption=cap)
 
 
 
