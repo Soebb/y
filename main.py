@@ -70,8 +70,8 @@ async def uptotg(bot, __):
     folder = "C:/example_folder"
     chat = -1001457054266
     total=[]
-    eps = []
-    dup_eps = []
+    titles = []
+    dup_titles = []
     for f in glob.glob(folder+'/*'):
         m = f.rsplit('/', 1)[1] + '\\'
         f=f.replace(m, '')
@@ -86,31 +86,31 @@ async def uptotg(bot, __):
             q="240" if q[:1] in ['2','3'] else q
             q=f' {q}P.'
             new_name = t+e+q+ext
-            if e in eps:
-                dup_eps.append(e)
+            if t in titles:
+                dup_titles.append(t)
             os.rename(folder+"/"+f, folder+"/"+new_name)
             if not "1080" in q:
-                eps.append(e)
+                titles.append(t)
                 total.append(new_name)
 
     folder=folder+"/"
     tot=sort_alphanumeric(total)
     for f in tot:
-        e = "E"+f.rsplit("E", 1)[1].split()[0]
+        t = f.rsplit("E", 1)[0]
         if not f in sended:
-            if not e in dup_eps:
+            if not t in dup_titles:
                 cap = get_cap(f)
                 await bot.send_video(video=folder+f, chat_id=chat, caption=cap)
                 await bot.send_document(document=folder+f, chat_id=chat, caption=cap)
                 sended.append(f)
             else:
                 for ff in tot:
-                    if e in ff:
+                    if t in ff:
                         cap = get_cap(ff)
                         await bot.send_video(video=folder+ff, chat_id=chat, caption=cap)
                         sended.append(ff)
                 for fff in tot:
-                    if e in fff:
+                    if t in fff:
                         cap = get_cap(fff)
                         await bot.send_document(document=folder+fff, chat_id=chat, caption=cap)
 
