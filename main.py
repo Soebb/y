@@ -3,13 +3,15 @@ from telethon import TelegramClient, events, Button
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 
-
-folder = "C:/temp"
+# input folder
+folder = "C:/example"
+# output folder
+out_folder = "outdir"
 BOT_TOKEN = " "
 API_ID = " "
 API_HASH = " "
 
-BOT_NAME = "cuut"
+BOT_NAME = "three-cut"
 
 
 Bot = TelegramClient(BOT_NAME, API_ID, API_HASH).start(bot_token=BOT_TOKEN)
@@ -82,7 +84,13 @@ async def callback(event):
         process_msg = await Bot.send_message(event.chat_id, "processing..")
         ext = '.' + name.rsplit('.', 1)[1]
         x = duration // 3
-        os.system(f'''ffmpeg -ss 0 -i "{input}" -to {x} -c copy "C:/dlmacvin/1aa/videos/{name.replace(ext, '-0'+ext)}"''')
+        os.system(f'''ffmpeg -ss 0 -i "{input}" -to {x} -c copy "{out_folder}/{name.replace(ext, ' - Part - 1'+ext)}"''')
+        await process_msg.delete()
+        process_msg = await Bot.send_message(event.chat_id, "First part done.\nSecond in progress..")
+        os.system(f'''ffmpeg -ss {x} -i "{input}" -to {x+x} -c copy "{out_folder}/{name.replace(ext, ' - Part - 2'+ext)}"''')
+        await process_msg.delete()
+        process_msg = await Bot.send_message(event.chat_id, "Second part done.\nThird in progress..")
+        os.system(f'''ffmpeg -ss {x+x} -i "{input}" -to {duration} -c copy "{out_folder}/{name.replace(ext, ' - Part - 3'+ext)}"''')
 
         await process_msg.delete()
         if chatid == 0:
