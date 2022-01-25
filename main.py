@@ -3,7 +3,6 @@ from telethon import TelegramClient, events, Button
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 
-previous_cut_time = '02:00:04'
 
 folder = "C:/temp"
 BOT_TOKEN = " "
@@ -82,8 +81,8 @@ async def callback(event):
         duration = int(metadata.get('duration').seconds)
         process_msg = await Bot.send_message(event.chat_id, "processing..")
         ext = '.' + name.rsplit('.', 1)[1]
-
-        os.system(f'''ffmpeg -ss {start} -i "{input}" -to {end} -c copy "C:/dlmacvin/1aa/videos/{name.replace(ext, '-0'+ext)}"''')
+        x = duration // 3
+        os.system(f'''ffmpeg -ss 0 -i "{input}" -to {x} -c copy "C:/dlmacvin/1aa/videos/{name.replace(ext, '-0'+ext)}"''')
 
         await process_msg.delete()
         if chatid == 0:
