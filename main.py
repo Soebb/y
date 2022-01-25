@@ -24,7 +24,7 @@ refresh_button = [
 msgid = 0
 chatid = 0
 v=folder+'*/'
-main =
+main = folder.rsplit('/', 1)[1] + '\\'
 @Bot.on(events.NewMessage(incoming=True, func=lambda e: e.is_private))
 async def start(event):
     keyboard = []
@@ -80,24 +80,9 @@ async def callback(event):
         input = folder + "/" + name
         metadata = extractMetadata(createParser(input))
         duration = int(metadata.get('duration').seconds)
-        dtime = str(datetime.timedelta(seconds=duration))[:11]
-        async with Bot.conversation(event.chat_id) as conv:
-            ask = await conv.send_message(f'تایم کل ویدیو : {dtime} \n\nجهت کات ویدیو تایم را به این صورت ارسال کنید \n 00:00:00 02:10:00 \n\nOr send /previous to keep the previous cut time.')
-            time = await conv.get_response()
-            time2 = time.text
-
-        if time2 == "/previous":
-            end = previous_cut_time
-        else:
-            end = f'0{time2[:1]}:{time2[:3][1:]}:{time2[3:]}'
-            previous_cut_time = end
-        start = "00:00:00"
-        await time.delete()
-        await ask.delete()
         process_msg = await Bot.send_message(event.chat_id, "processing..")
-
         ext = '.' + name.rsplit('.', 1)[1]
-        end_sec = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(end.split(":"))))
+
         os.system(f'''ffmpeg -ss {start} -i "{input}" -to {end} -c copy "C:/dlmacvin/1aa/videos/{name.replace(ext, '-0'+ext)}"''')
 
         await process_msg.delete()
