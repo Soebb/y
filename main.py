@@ -1,20 +1,17 @@
 from pyromod import listen
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-import os
-#import datetime, glob
+import os, glob, re, shutil
 import pysubs2
 from pyrogram.errors import FloodWait
-import re
 import PTN
 import uuid
 import speech_recognition as sr
 from tqdm import tqdm
 from segmentAudio import silenceRemoval
 from writeToFile import write_to_file
-import shutil
-#from hachoir.parser import createParser
-#from hachoir.metadata import extractMetadata
+from hachoir import extractMetadata
+from hachoir import createParser
 
 Domain = 'https://mac-dl.tk'
 
@@ -39,9 +36,9 @@ if 'BOT_TOKEN' in os.environ:
     API_ID = os.environ.get('API_ID')
     API_HASH = os.environ.get('API_HASH')
 else:
-    BOT_TOKEN = '1878590020:AAE_HsftT1qKptnP0_ca5fs_pBbjqj5tJ3w'
-    API_ID = '4328913'
-    API_HASH = '3230ec801f78a517c9a2ad6bebb7f7b4'
+    BOT_TOKEN = " "
+    API_ID = " "
+    API_HASH = " "
 
 Bot = Client(
     ":memory:",
