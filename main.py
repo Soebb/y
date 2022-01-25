@@ -1,4 +1,4 @@
-import os, datetime, glob, subprocess, json
+import os, glob
 from telethon import TelegramClient, events, Button
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -32,7 +32,7 @@ async def start(event):
     keyboard.append(refresh_button)
     try:
         for file in glob.glob(v):
-            try:
+            if file.endswith(('.ts', '.mp4', '.mkv')):
                 keyboard.append(
                     [
                         Button.inline(
@@ -41,9 +41,6 @@ async def start(event):
                         )
                     ]
                 )
-            except Exception as e:
-                print("problem with "+file)
-                pass
     except Exception as e:
         print(e)
         pass
@@ -59,14 +56,15 @@ async def callback(event):
         keyboard.append(refresh_button)
         try:
             for file in glob.glob(v):
-                keyboard.append(
-                    [
-                        Button.inline(
-                            file.rsplit('/', 1)[1].replace(main, ''),
-                            data=file.rsplit('/', 1)[1].replace(main, '')
-                        )
-                    ]
-                )
+                if file.endswith(('.ts', '.mp4', '.mkv')):
+                    keyboard.append(
+                        [
+                            Button.inline(
+                                file.rsplit('/', 1)[1].replace(main, ''),
+                                data=file.rsplit('/', 1)[1].replace(main, '')
+                            )
+                        ]
+                    )
         except Exception as e:
             print(e)
             return
@@ -91,7 +89,6 @@ async def callback(event):
         await process_msg.delete()
         process_msg = await Bot.send_message(event.chat_id, "Second part done.\nThird in progress..")
         os.system(f'''ffmpeg -ss {x+x} -i "{input}" -to {duration} -c copy "{out_folder}/{name.replace(ext, ' - Part - 3'+ext)}"''')
-
         await process_msg.delete()
         if chatid == 0:
             msg = await Bot.send_message(event.chat_id, 'Done! ' + name)
