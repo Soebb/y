@@ -10,8 +10,8 @@ import speech_recognition as sr
 from tqdm import tqdm
 from segmentAudio import silenceRemoval
 from writeToFile import write_to_file
-from hachoir import extractMetadata
-from hachoir import createParser
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
 
 Domain = 'https://mac-dl.tk'
 
