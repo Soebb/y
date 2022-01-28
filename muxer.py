@@ -84,7 +84,7 @@ async def edame(client, message):
 async def estop(client, message):
     win.activate()
     keyboard.press_and_release('pause')
-    await message.reply('stoped.')
+    await message.reply('stoped. to resume send /resume')
 
 @Client.on_message(filters.command(['cancel']) & check_user & filters.private)
 async def kansel(client, message):
