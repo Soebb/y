@@ -3,10 +3,13 @@ from helper_func.progress_bar import progress_bar
 from helper_func.dbhelper import Database as Db
 from helper_func.mux import softmux_vid, hardmux_vid
 from config import Config
-import time
-import os
+import time, os
+import keyboard
+import pygetwindow as gw
 
 db = Db()
+
+win = gw.getActiveWindow()
 
 async def _check_user(filt, c, m):
     chat_id = str(m.from_user.id)
@@ -19,7 +22,6 @@ check_user = filters.create(_check_user)
 
 @Client.on_message(filters.command('softmux') & check_user & filters.private)
 async def softmux(client, message):
-
     chat_id = message.from_user.id
     og_vid_filename = db.get_vid_filename(chat_id)
     og_sub_filename = db.get_sub_filename(chat_id)
@@ -72,21 +74,29 @@ async def softmux(client, message):
 
     db.erase(chat_id)
 
+@Client.on_message(filters.command(['resume']) & check_user & filters.private)
+async def edame(client, message):
+    win.activate()
+    keyboard.press_and_release('enter')
+    await message.reply('resumed.')
 
-@Client.on_message(filters.command(['hardmux', 'cancel']) & check_user & filters.private)
+@Client.on_message(filters.command(['stop']) & check_user & filters.private)
+async def estop(client, message):
+    win.activate()
+    keyboard.press_and_release('pause')
+    await message.reply('stoped.')
+
+@Client.on_message(filters.command(['cancel']) & check_user & filters.private)
+async def kansel(client, message):
+    chat_id = message.from_user.id
+    db.erase(chat_id)
+    await message.reply('canceled.')
+    exit()
+
+@Client.on_message(filters.command(['hardmux']) & check_user & filters.private)
 async def hardmux(client, message):
     chat_id = message.from_user.id
     og_vid_filename = db.get_vid_filename(chat_id)
-
-    if "cancel" in message.text:
-        try:
-            os.remove(Config.DOWNLOAD_DIR+'/'+'.'.join(og_vid_filename.split('.')[:-1])+'1.mp4')
-        except:
-            await message.reply("can't cancel! maybe didn't any progress in process.")
-        else:
-            await message.reply("canceled.")
-        return
-
     og_sub_filename = db.get_sub_filename(chat_id)
     text = ''
     if not og_vid_filename :
