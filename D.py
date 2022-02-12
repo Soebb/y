@@ -21,16 +21,16 @@ from ..utils import (
 
 class DaftsexIE(InfoExtractor):
     _VALID_URL = r'https?://(?:www\.)?daftsex\.com/watch/(?P<id>-?\d+_\d+)'
-    _TESTS = [{
-        'url': 'htt',
-        'md5': 'ae6ef4f04d19ac84e4658046d02c151c',
+    _TESTS = {
+        'url': 'http://daftsex.com/watch/-35370899_456246186',
+        'md5': 'd95135e6cea2d905bea20dbe82cda64a',
         'info_dict': {
-            'id': '5421746',
+            'id': '-35370899_456246186',
             'ext': 'mp4',
-            'title': 'Forsaken',
+            'title': 'just relaxing...',
             'description': 'Forsaken',
-            'upload_date': '19700101',
-            'timestamp': 0,
+            'upload_date': '20201113',
+            'timestamp': 1605261911,
             'thumbnail': 'http',
         },
     }, {
