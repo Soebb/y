@@ -39,16 +39,13 @@ class DaftsexIE(InfoExtractor):
             embed_page, 'Global Parameters', flags=re.DOTALL), video_id, transform_source=js_to_json)
 
         if 'credentials' in globParams['video']:
-
             title = self._search_regex(
                 r'<meta.*itemprop ?= ?"name".*content ?= ?"([^"]+)".*/>',
                 webpage, 'Title', default='Empty Title', fatal=False)
             uploadDate = self._search_regex(
                 r'<meta.*itemprop ?= ?"uploadDate".*content ?= ?"([^"]+)".*/?>',
                 webpage, 'Upload Date', fatal=False)
-
             timestamp = unified_timestamp(uploadDate)
-
             description = self._search_regex(
                 r'<meta.*itemprop ?= ?"description".*content ?= ?"([^"]+)".*/>',
                 webpage, 'Description', fatal=False)
@@ -117,7 +114,6 @@ class DaftsexIE(InfoExtractor):
             }
 
         elif not 'credentials' in globParams['video']:
-
             title = get_elements_by_class('heading', webpage)[-1]
             duration = parse_duration(self._search_regex(
                 r'Duration: ((?:[0-9]{2}:){0,2}[0-9]{2})',
