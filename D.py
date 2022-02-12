@@ -1,11 +1,11 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+import re
+
 from .common import InfoExtractor
 from .vk import VKIE
 from ..compat import compat_b64decode
-
-import re
 
 from ..utils import (
     int_or_none,
@@ -34,87 +34,89 @@ class DaftsexIE(InfoExtractor):
         video_id = self._match_id(url)
         webpage = self._download_webpage(url, video_id)
 
-        title = self._search_regex(
-            r'<meta.*itemprop ?= ?"name".*content ?= ?"([^"]+)".*/>',
-            webpage, 'Title', default='Empty Title', fatal=False)
-
-        uploadDate = self._search_regex(
-            r'<meta.*itemprop ?= ?"uploadDate".*content ?= ?"([^"]+)".*/?>',
-            webpage, 'Upload Date', fatal=False)
-
-        timestamp = unified_timestamp(uploadDate)
-
-        description = self._search_regex(
-            r'<meta.*itemprop ?= ?"description".*content ?= ?"([^"]+)".*/>',
-            webpage, 'Description', fatal=False)
-
-        globalEmbed_url = self._search_regex(
-            r'<script.+?window.globEmbedUrl = \'((?:https?:)?//(?:daxab\.com|dxb\.to|[^/]+/player)/[^\']+)\'.*?></script>',
-            webpage, 'global Embed url', flags=re.DOTALL)
-
-        hash = self._search_regex(
-            r'<script id="data-embed-video.+?hash: "([^"]+)"[^<]*</script>',
-            webpage, 'Hash', flags=re.DOTALL)
-
-        embed_url = globalEmbed_url + hash
-
-        if VKIE.suitable(embed_url):
-            return self.url_result(embed_url, VKIE.ie_key(), video_id)
-
-        embed_page = self._download_webpage(
-            embed_url, video_id, 'Downloading embed webpage', headers={'Referer': url})
-
         globParams = self._parse_json(self._search_regex(
             r'<script id="globParams">.*window.globParams = ([^;]+);[^<]+</script>',
             embed_page, 'Global Parameters', flags=re.DOTALL), video_id, transform_source=js_to_json)
 
-        hostName = compat_b64decode(globParams['server'][::-1]).decode()
-        server = 'https://%s/method/video.get/' % hostName
+        if 'credentials' in globParams['video']:
 
-        item = self._download_json(
-            f'{server}{video_id}', video_id,
-            headers={'Referer': url}, query={
-                'token': globParams['video']['access_token'],
-                'videos': video_id,
-                'ckey': globParams['c_key'],
-                'credentials': globParams['video']['credentials'],
-            })['response']['items'][0]
+            title = self._search_regex(
+                r'<meta.*itemprop ?= ?"name".*content ?= ?"([^"]+)".*/>',
+                webpage, 'Title', default='Empty Title', fatal=False)
 
-        formats = []
-        for f_id, f_url in item.get('files', {}).items():
-            if f_id == 'external':
-                return self.url_result(f_url)
-            ext, height = f_id.split('_')
-            if globParams['video']['partial']['quality']['height'] is not None:
-                formats.append({
-                    'format_id': f'{height}p',
-                    'url': f'https://{hostName}/{f_url[8:]}&videos={video_id}&extra_key={globParams["video"]["partial"]["quality"][height]}',
-                    'height': int_or_none(height),
-                    'ext': ext,
-                })
-        self._sort_formats(formats)
+            uploadDate = self._search_regex(
+                r'<meta.*itemprop ?= ?"uploadDate".*content ?= ?"([^"]+)".*/?>',
+                webpage, 'Upload Date', fatal=False)
 
-        thumbnails = []
-        for k, v in item.items():
-            if k.startswith('photo_') and v:
-                width = k.replace('photo_', '')
-                thumbnails.append({
-                    'id': width,
-                    'url': v,
-                    'width': int_or_none(width),
-                })
+            timestamp = unified_timestamp(uploadDate)
 
-        return {
-            'id': video_id,
-            'title': title,
-            'formats': formats,
-            'comment_count': int_or_none(item.get('comments')),
-            'description': description,
-            'duration': int_or_none(item.get('duration')),
-            'thumbnails': thumbnails,
-            'timestamp': timestamp,
-            'view_count': int_or_none(item.get('views')),
-        }
+            description = self._search_regex(
+                r'<meta.*itemprop ?= ?"description".*content ?= ?"([^"]+)".*/>',
+                webpage, 'Description', fatal=False)
+
+            globalEmbed_url = self._search_regex(
+                r'<script.+?window.globEmbedUrl = \'((?:https?:)?//(?:daxab\.com|dxb\.to|[^/]+/player)/[^\']+)\'.*?></script>',
+                webpage, 'global Embed url', flags=re.DOTALL)
+
+            hash = self._search_regex(
+                r'<script id="data-embed-video.+?hash: "([^"]+)"[^<]*</script>',
+                webpage, 'Hash', flags=re.DOTALL)
+
+            embed_url = globalEmbed_url + hash
+
+            if VKIE.suitable(embed_url):
+                return self.url_result(embed_url, VKIE.ie_key(), video_id)
+
+            embed_page = self._download_webpage(
+                embed_url, video_id, 'Downloading embed webpage', headers={'Referer': url})
+
+            hostName = compat_b64decode(globParams['server'][::-1]).decode()
+            server = 'https://%s/method/video.get/' % hostName
+
+            item = self._download_json(
+                f'{server}{video_id}', video_id,
+                headers={'Referer': url}, query={
+                    'token': globParams['video']['access_token'],
+                    'videos': video_id,
+                    'ckey': globParams['c_key'],
+                    'credentials': globParams['video']['credentials'],
+                })['response']['items'][0]
+
+            formats = []
+            for f_id, f_url in item.get('files', {}).items():
+                if f_id == 'external':
+                    return self.url_result(f_url)
+                ext, height = f_id.split('_')
+                if globParams['video']['partial']['quality']['height'] is not None:
+                    formats.append({
+                        'format_id': f'{height}p',
+                        'url': f'https://{hostName}/{f_url[8:]}&videos={video_id}&extra_key={globParams["video"]["partial"]["quality"][height]}',
+                        'height': int_or_none(height),
+                        'ext': ext,
+                    })
+            self._sort_formats(formats)
+
+            thumbnails = []
+            for k, v in item.items():
+                if k.startswith('photo_') and v:
+                    width = k.replace('photo_', '')
+                    thumbnails.append({
+                        'id': width,
+                        'url': v,
+                        'width': int_or_none(width),
+                    })
+
+            return {
+                'id': video_id,
+                'title': title,
+                'formats': formats,
+                'comment_count': int_or_none(item.get('comments')),
+                'description': description,
+                'duration': int_or_none(item.get('duration')),
+                'thumbnails': thumbnails,
+                'timestamp': timestamp,
+                'view_count': int_or_none(item.get('views')),
+            }
 
 # coding: utf-8
 from __future__ import unicode_literals
