@@ -71,7 +71,7 @@ class DaftsexIE(InfoExtractor):
         server = 'https://%s/method/video.get/' % hostName
 
         item = self._download_json(
-            server + video_id, video_id,
+            f'{server}{video_id}', video_id,
             headers={'Referer': url}, query={
                 'token': globParams['video']['access_token'],
                 'videos': video_id,
