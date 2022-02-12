@@ -16,16 +16,11 @@ import re
 class DaftsexIE(InfoExtractor):
     _VALID_URL = r'https?://(?:www\.)?daftsex\.com/watch/(?P<id>-?\d+_\d+)'
     _TESTS = [{
-        'url': 'https://daftsex.com/watch/-2000421746_85421746',
-        'md5': 'ae6ef4f04d19ac84e4658046d02c151c',
+        'url': 'https://daftsex.com/watch/-156601359_456242791',
         'info_dict': {
-            'id': '-2000421746_85421746',
+            'id': '-156601359_456242791',
             'ext': 'mp4',
-            'title': 'Forsaken By Hope Studio Clip',
-            'description': 'Forsaken By Hope Studio Clip — Смотреть онлайн',
-            'upload_date': '19700101',
-            'timestamp': 0,
-            'thumbnail': 'https://sun9-86.userapi.com/impf/7vN3ACwSTgChP96OdOfzFjUCzFR6ZglDQgWsIw/KPaACiVJJxM.jpg?size=800x450&quality=96&keep_aspect_ratio=1&background=000000&sign=b48ea459c4d33dbcba5e26d63574b1cb&type=video_thumb',
+            'title': 'Skye Blue - Dinner And A Show',
         },
     }]
 
