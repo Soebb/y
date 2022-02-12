@@ -5,12 +5,18 @@ from .common import InfoExtractor
 from .vk import VKIE
 from ..compat import compat_b64decode
 
+import re
+
 from ..utils import (
     int_or_none,
     js_to_json,
+    get_elements_by_class,
+    parse_count,
+    parse_duration,
+    try_get,
     unified_timestamp,
 )
-import re
+
 
 
 class DaftsexIE(InfoExtractor):
