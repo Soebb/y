@@ -27,8 +27,8 @@ class DaftsexIE(InfoExtractor):
         'info_dict': {
             'id': '-35370899_456246186',
             'ext': 'mp4',
-            'title': 'just relaxing...',
-            'description': 'Forsaken',
+            'title': 'just relaxing',
+            'description': 'just relaxing - Watch video Watch video in high quality',
             'upload_date': '20201113',
             'timestamp': 1605261911,
             'thumbnail': 'http',
