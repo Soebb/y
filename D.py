@@ -117,7 +117,7 @@ class DaftsexIE(InfoExtractor):
                 r'<script id="data-embed-video.+?hash: "([^"]+)"[^<]*</script>',
                 webpage, 'Hash', flags=re.DOTALL)
 
-            embed_url = globalEmbed_url + hash
+            embed_url = f'{globalEmbed_url}{hash}'
 
             if VKIE.suitable(embed_url):
                 return self.url_result(embed_url, VKIE.ie_key(), video_id)
