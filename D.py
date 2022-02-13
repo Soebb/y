@@ -127,7 +127,7 @@ class DaftsexIE(InfoExtractor):
 
             globParams = self._parse_json(self._search_regex(
                 r'<script id="globParams">.*window.globParams = ([^;]+);[^<]+</script>',
-                embed_page, 'Global Parameters', flags=re.DOTALL), video_id, transform_source=js_to_json)
+                embed_page, 'Global Parameters', fatal=False, flags=re.DOTALL), video_id, transform_source=js_to_json)
 
             hostName = compat_b64decode(globParams['server'][::-1]).decode()
             server = 'https://%s/method/video.get/' % hostName
@@ -146,7 +146,7 @@ class DaftsexIE(InfoExtractor):
                 if f_id == 'external':
                     return self.url_result(f_url)
                 ext, height = f_id.split('_')
-                if globParams['video']['partial']['quality']['height'] is not None:
+                if globParams['video']['partial']['quality'].get(height) is not None:
                     formats.append({
                         'format_id': f'{height}p',
                         'url': f'https://{hostName}/{f_url[8:]}&videos={video_id}&extra_key={globParams["video"]["partial"]["quality"][height]}',
