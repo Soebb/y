@@ -5,9 +5,9 @@ from .common import InfoExtractor
 from .vk import VKIE
 from ..compat import compat_b64decode
 from ..utils import (
+    get_elements_by_class,
     int_or_none,
     js_to_json,
-    get_elements_by_class,
     parse_count,
     parse_duration,
     traverse_obj,
