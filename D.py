@@ -31,7 +31,7 @@ class DaftsexIE(InfoExtractor):
             'description': 'just relaxing - Watch video Watch video in high quality',
             'upload_date': '20201113',
             'timestamp': 1605261911,
-            'thumbnail': 'https://sun9-53.userapi.com/impf/-43BuMDIawmBGr3GLcZ93CYwWf2PBv_tVWoS1A/dnu41DnARU4.jpg?size=800x450&quality=96&keep_aspect_ratio=1&background=000000&sign=6af2c26ff4a45e55334189301c867384&type=video_thumb',
+            'thumbnail': r're:https://[^/]+/impf/-43BuMDIawmBGr3GLcZ93CYwWf2PBv_tVWoS1A/dnu41DnARU4\.jpg\?size=800x450&quality=96&keep_aspect_ratio=1&background=000000&sign=6af2c26ff4a45e55334189301c867384&type=video_thumb',
         },
     }, {
         'url': 'https://daftsex.com/watch/-156601359_456242791',
