@@ -21,7 +21,7 @@ from ..utils import (
 
 class DaftsexIE(InfoExtractor):
     _VALID_URL = r'https?://(?:www\.)?daftsex\.com/watch/(?P<id>-?\d+_\d+)'
-    _TESTS = {
+    _TESTS = [{
         'url': 'https://daftsex.com/watch/-35370899_456246186',
         'md5': 'd95135e6cea2d905bea20dbe82cda64a',
         'info_dict': {
