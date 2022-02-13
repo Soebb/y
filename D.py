@@ -10,6 +10,7 @@ from ..utils import (
     get_elements_by_class,
     parse_count,
     parse_duration,
+    traverse_obj,
     try_get,
     unified_timestamp,
 )
@@ -97,7 +98,7 @@ class DaftsexIE(InfoExtractor):
         except KeyError:
             title = self._html_search_meta('name', webpage, 'Title', default=None, fatal=False)
             upload_date = self._html_search_meta('uploadDate', webpage, 'Upload Date', default=None, fatal=False)
-            if upload_date is not None:
+            if upload_date:
                 timestamp = unified_timestamp(upload_date)
             description = self._html_search_meta('description', webpage, 'Description', default=None, fatal=False)
 
